@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.*;
 
 /**
  * Created by DufVi1731300 on 2018-02-26.
@@ -12,18 +13,23 @@ public class Main {
     public static void main(String[] args) {
         Map<String, Contact> mapContacts = new HashMap<>();
         Queue<Contact> fileRappels = new LinkedList<>();
+        File hashMapData = new File("files/data.dat");
+        GestionnaireContact gestionnaire = new GestionnaireContact();
+        chargerListe(mapContacts);
 
         System.out.print("Bienvenue dans la liste de contacts!");
-        while (menu(mapContacts, fileRappels)) {}
+        while (menu(mapContacts, fileRappels, hashMapData, gestionnaire)) {}
+
     }
 
-    public static boolean menu(Map map, Queue file) {
+    public static boolean menu(Map map, Queue file, File data, GestionnaireContact gestionnaire) {
         System.out.print("\n1- Ajouter un contact\n" +
                 "2- Modifier un contact\n" +
                 "3- Afficher les contacts\n" +
                 "4- Liste de rappels\n" +
                 "5- Supprimer un contact\n" +
-                "6- Quitter\n" +
+                "6- Charger une liste\n" +
+                "7- Quitter" +
                 "> ");
 
         switch (sc.nextInt()) {
@@ -184,5 +190,17 @@ public class Main {
         entree = sc.nextInt() - 1;
         if (entree >= 0 && entree < map.size()) map.remove(entree);
         else System.out.print("Cette entree est invalide.");
+    }
+
+    public static void chargerListe(Map map) {
+        try {
+            ObjectInputStream entree = new ObjectInputStream(new BufferedInputStream(new FileInputStream("files/data.dat")));
+        }
+        catch (FileNotFoundException ex) {
+            //Peut-être penser à la charger pour de vrai?
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
