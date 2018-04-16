@@ -4,7 +4,8 @@ import java.util.*;
  * Created by dufvi1731300 on 2018-04-12.
  */
 public class Gestionnaire {
-    static Scanner sc = new Scanner(System.in);
+    private static Scanner sc = new Scanner(System.in);
+    private static char entreeChar = ' ';
     private int modification = 0; //0 == afficher, 1 == ajouter; 2 = modifier
     //variante: false pour le contact, true pour l'occupation
 
@@ -18,6 +19,15 @@ public class Gestionnaire {
             case 0: System.out.println(contact.getPrenom()); break;
             case 1: contact.setPrenom(sc.nextLine());
             case 2: System.out.print(contact.getPrenom() + " "); contact.setPrenom(sc.nextLine());
+        }
+    }
+
+    public void managePoste(Contact contact) {
+        System.out.print(" Poste: ");
+        switch (modification) {
+            case 0: System.out.println(contact.getOcc().getPoste()); break;
+            case 1: contact.getOcc().setPoste(sc.nextLine());
+            case 2: System.out.print(contact.getOcc().getPoste() + " "); contact.getOcc().setPoste(sc.nextLine());
         }
     }
 
@@ -106,15 +116,18 @@ public class Gestionnaire {
         else System.out.print("   Ville: ");
         switch (modification) {
             case 0:
-
+                if (!variante) System.out.println(contact.getAd().getVille());
+                else System.out.println(contact.getOcc().getEnt().getAd().getVille());
                 break;
 
             case 1:
-
+                if (!variante) contact.getAd().setVille(sc.nextLine());
+                else contact.getOcc().getEnt().getAd().setVille(sc.nextLine());
                 break;
 
             case 2:
-
+                if (!variante) {System.out.print(contact.getAd().getVille() + " "); contact.getAd().setVille(sc.nextLine());}
+                else {System.out.print(contact.getOcc().getEnt().getAd().getVille() + " "); contact.getOcc().getEnt().getAd().setVille(sc.nextLine());}
         }
     }
 
@@ -123,15 +136,18 @@ public class Gestionnaire {
         else System.out.print("   Province: ");
         switch (modification) {
             case 0:
-
+                if (!variante) System.out.println(contact.getAd().getProvince());
+                else System.out.println(contact.getOcc().getEnt().getAd().getProvince());
                 break;
 
             case 1:
-
+                if (!variante) contact.getAd().setProvince(sc.nextLine());
+                else contact.getOcc().getEnt().getAd().setProvince(sc.nextLine());
                 break;
 
             case 2:
-
+                if (!variante) {System.out.print(contact.getAd().getProvince() + " "); contact.getAd().setProvince(sc.nextLine());}
+                else {System.out.print(contact.getOcc().getEnt().getAd().getProvince() + " "); contact.getOcc().getEnt().getAd().setProvince(sc.nextLine());}
         }
     }
 
@@ -140,48 +156,47 @@ public class Gestionnaire {
         else System.out.print("   Pays: ");
         switch (modification) {
             case 0:
-
+                if (!variante) System.out.println(contact.getAd().getPays());
+                else System.out.println(contact.getOcc().getEnt().getAd().getPays());
                 break;
 
             case 1:
-
+                if (!variante) contact.getAd().setPays(sc.nextLine());
+                else contact.getOcc().getEnt().getAd().setPays(sc.nextLine());
                 break;
 
             case 2:
-
-        }
-    }
-
-    public void managePoste(Contact contact) {
-        System.out.print(" Poste: ");
-        switch (modification) {
-            case 0:
-
-                break;
-
-            case 1:
-
-                break;
-
-            case 2:
-
+                if (!variante) {System.out.print(contact.getAd().getPays() + " "); contact.getAd().setPays(sc.nextLine());}
+                else {System.out.print(contact.getOcc().getEnt().getAd().getPays() + " "); contact.getOcc().getEnt().getAd().setPays(sc.nextLine());}
         }
     }
 
     public void manageTelephone(Contact contact) {
         switch (modification) {
             case 0:
-                for (Telephone telephone: ct.getListTelephones()) {
+                for (Telephone telephone: contact.getListTelephones()) {
                     System.out.println(" Information (cellulaire, maison, travail): " + telephone.getInfos());
                     System.out.println(" Numéro: " + telephone.getNumero());
                 }
                 break;
 
             case 1:
+                System.out.print("Voulez-vous entrer un numéro de téléphone (o/n)?\n> ");
+                entreeChar =sc.nextLine().toLowerCase().charAt(0);
+
+                while (entreeChar == 'o') {
+
+                }
 
                 break;
 
             case 2:
+                for (Telephone telephone: contact.getListTelephones()) {
+                    System.out.print(" Information (cellulaire, maison, travail): " + telephone.getInfos());
+                    telephone.setInfos(sc.nextLine());
+                    System.out.print(" Numéro: " + telephone.getNumero());
+                    telephone.setNumero(sc.nextLine());
+                }
         }
     }
 }
