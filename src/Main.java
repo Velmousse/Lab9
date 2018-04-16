@@ -14,7 +14,7 @@ public class Main {
         Map<String, Contact> mapContacts = new HashMap<>();
         Queue<Contact> fileRappels = new LinkedList<>();
         File hashMapData = new File("files/data.dat");
-        GestionnaireContact gestionnaire = new GestionnaireContact();
+        Gestionnaire gestionnaire = new Gestionnaire();
         chargerListe(mapContacts);
 
         System.out.print("Bienvenue dans la liste de contacts!");
@@ -22,7 +22,7 @@ public class Main {
 
     }
 
-    public static boolean menu(Map map, Queue file, File data, GestionnaireContact gestionnaire) {
+    public static boolean menu(Map map, Queue file, File data, Gestionnaire gestionnaire) {
         System.out.print("\n1- Ajouter un contact\n" +
                 "2- Modifier un contact\n" +
                 "3- Afficher les contacts\n" +
@@ -33,7 +33,7 @@ public class Main {
                 "> ");
 
         switch (sc.nextInt()) {
-            case 1: System.out.print(" Qui (prénom)? "); ajouterContact(map, sc.nextLine(), false); return true;
+            case 1: System.out.print(" Qui (prénom)? "); ajouterContact(map, sc.nextLine(), false, gestionnaire); return true;
             case 2: modifierContact(map); return true;
             case 3: afficherContact(map, false, null); return true;
             case 4: afficherRappels(file, map); return true;
@@ -42,8 +42,70 @@ public class Main {
         }
     }
 
-    public static void ajouterContact(Map map, String prenom, boolean modification) {
+
+
+
+
+
+
+
+
+
+    public static void gestionnaire(int modification, Map map) {
+        Gestionnaire gest = new Gestionnaire();
+        gest.setModification(modification);
+        boolean var = false;
+        Contact ct;
+
+        if (modification == 0) {
+            System.out.print("\nQuel contact voulez-vous afficher (prénom)?\n> ");
+            ct = (Contact) map.get(sc.nextLine()); //Vérifier les exceptions
+            System.out.println("Veuillez entrer les informations suivantes (laissez vide si correct)");
+        }
+        else if (modification == 1)
+            ct = new Contact();
+        else {
+            System.out.print("\nQuel contact voulez-vous modifier (prénom)?\n> ");  //Vérifier si le contact existe avant
+            ct = new Contact();
+            System.out.println("Veuillez entrer les informations suivantes (laissez vide si correct)");
+        }
+
+        gest.managePrenom(ct);
+        for (int i = 0; i < 1; i++) {
+            if (var) {
+                System.out.println("Occupation");
+                gest.managePoste(ct);
+                System.out.println(" Entreprise");
+            }
+            gest.manageNom(ct, var);
+            if (!var) System.out.println("Adresse");
+            else System.out.println("  Adresse");
+            gest.manageNumeroCivique(ct, var);
+            gest.manageRue(ct, var);
+            gest.manageAppartement(ct, var);
+            gest.manageVille(ct, var);
+            gest.manageProvince(ct, var);
+            gest.managePays(ct, var);
+            var = true;
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public static void ajouterContact(Map map, String prenom, boolean modification, Gestionnaire gestionnaire) {
         Contact ct = new Contact();
+
         //Gérer les exceptions ici
         System.out.print("\nVeuillez entrer les informations suivantes (laisser vide si correct)\n" +
                 "Prénom (" + ct.getPrenom() + "): ");
