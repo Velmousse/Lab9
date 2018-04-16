@@ -17,7 +17,7 @@ public class Gestionnaire {
         System.out.print("Prénom: ");
         switch (modification) {
             case 0: System.out.println(contact.getPrenom()); break;
-            case 1: contact.setPrenom(sc.nextLine());
+            case 1: contact.setPrenom(sc.nextLine()); break;
             case 2: System.out.print(contact.getPrenom() + " "); contact.setPrenom(sc.nextLine());
         }
     }
@@ -26,7 +26,7 @@ public class Gestionnaire {
         System.out.print(" Poste: ");
         switch (modification) {
             case 0: System.out.println(contact.getOcc().getPoste()); break;
-            case 1: contact.getOcc().setPoste(sc.nextLine());
+            case 1: contact.getOcc().setPoste(sc.nextLine()); break;
             case 2: System.out.print(contact.getOcc().getPoste() + " "); contact.getOcc().setPoste(sc.nextLine());
         }
     }

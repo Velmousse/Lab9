@@ -91,7 +91,6 @@ public class Main {
         gest.manageTelephone(ct);
 
         if (modification == 1 || modification == 2) map.put(ct.getPrenom().toLowerCase(), ct);
-
     }
 
 
