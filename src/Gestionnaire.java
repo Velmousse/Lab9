@@ -5,7 +5,8 @@ import java.util.*;
  */
 public class Gestionnaire {
     private static Scanner sc = new Scanner(System.in);
-    private static char entreeChar = ' ';
+    private char entreeChar = ' ';
+    private Contact contact;
     private int modification = 0; //0 == afficher, 1 == ajouter; 2 = modifier
     //variante: false pour le contact, true pour l'occupation
 
@@ -13,7 +14,7 @@ public class Gestionnaire {
         this.modification = modification;
     }
 
-    public void managePrenom(Contact contact) {
+    public void managePrenom() {
         System.out.print("Prénom: ");
         switch (modification) {
             case 0: System.out.println(contact.getPrenom()); break;
@@ -22,7 +23,7 @@ public class Gestionnaire {
         }
     }
 
-    public void managePoste(Contact contact) {
+    public void managePoste() {
         System.out.print(" Poste: ");
         switch (modification) {
             case 0: System.out.println(contact.getOcc().getPoste()); break;
@@ -31,7 +32,7 @@ public class Gestionnaire {
         }
     }
 
-    public void manageNom(Contact contact, boolean variante) {
+    public void manageNom(boolean variante) {
         if (!variante) System.out.print("Nom: ");
         else System.out.print("  Nom: ");
         switch (modification) {
@@ -41,8 +42,14 @@ public class Gestionnaire {
                 break;
 
             case 1:
-                if (!variante) contact.setNom(sc.nextLine());
-                else contact.getOcc().getEnt().setNom(sc.nextLine());
+                try {
+                    if (!variante) contact.setNom(sc.nextLine());
+                    else contact.getOcc().getEnt().setNom(sc.nextLine());
+                }
+                catch (TypeNotPresentException ex) {
+                    System.out.println("Argument invalide");
+                    manageNom(variante);
+                }
                 break;
 
             case 2:
@@ -51,7 +58,7 @@ public class Gestionnaire {
         }
     }
 
-    public void manageNumeroCivique(Contact contact, boolean variante) {
+    public void manageNumeroCivique(boolean variante) {
         if (!variante) System.out.print(" Numéro civique: ");
         else System.out.print("   Numéro civique: ");
         switch (modification) {
@@ -71,7 +78,7 @@ public class Gestionnaire {
         }
     }
 
-    public void manageRue(Contact contact, boolean variante) {
+    public void manageRue(boolean variante) {
         if (!variante) System.out.print(" Rue: ");
         else System.out.print("   Rue: ");
         switch (modification) {
@@ -91,7 +98,7 @@ public class Gestionnaire {
         }
     }
 
-    public void manageAppartement(Contact contact, boolean variante) {
+    public void manageAppartement(boolean variante) {
         if (!variante) System.out.print(" Appartement: ");
         else System.out.print("   Appartement: ");
         switch (modification) {
@@ -111,7 +118,7 @@ public class Gestionnaire {
         }
     }
 
-    public void manageVille(Contact contact, boolean variante) {
+    public void manageVille(boolean variante) {
         if (!variante) System.out.print(" Ville: ");
         else System.out.print("   Ville: ");
         switch (modification) {
@@ -131,7 +138,7 @@ public class Gestionnaire {
         }
     }
 
-    public void manageProvince(Contact contact, boolean variante) {
+    public void manageProvince(boolean variante) {
         if (!variante) System.out.print(" Province: ");
         else System.out.print("   Province: ");
         switch (modification) {
@@ -151,7 +158,7 @@ public class Gestionnaire {
         }
     }
 
-    public void managePays(Contact contact, boolean variante) {
+    public void managePays(boolean variante) {
         if (!variante) System.out.print(" Pays: ");
         else System.out.print("   Pays: ");
         switch (modification) {
@@ -171,7 +178,7 @@ public class Gestionnaire {
         }
     }
 
-    public void manageTelephone(Contact contact) {
+    public void manageTelephone() {
         switch (modification) {
             case 0:
                 for (Telephone telephone: contact.getListTelephones()) {
@@ -185,7 +192,13 @@ public class Gestionnaire {
                 entreeChar =sc.nextLine().toLowerCase().charAt(0);
 
                 while (entreeChar == 'o') {
-
+                    Telephone tel = new Telephone();
+                    System.out.println(" Information (cellulaire, maison, travail): " + tel.getInfos());
+                    sc.next();
+                    System.out.println(" Numéro: " + tel.getNumero());
+                    contact.getListTelephones().add(tel);
+                    System.out.print("Voulez-vous entrer un autre numéro de téléphone?\n> ");
+                    entreeChar = sc.nextLine().toLowerCase().charAt(0);
                 }
 
                 break;
@@ -198,5 +211,19 @@ public class Gestionnaire {
                     telephone.setNumero(sc.nextLine());
                 }
         }
+    }
+
+    public Contact getContact() {
+        return contact;
+    }
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
+
+    public String entree() {
+        String entree = "";
+
+        return entree;
     }
 }
