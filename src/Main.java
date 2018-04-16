@@ -33,9 +33,9 @@ public class Main {
                 "> ");
 
         switch (sc.nextInt()) {
-            case 1: System.out.print(" Qui (prénom)? "); ajouterContact(map, sc.nextLine(), false, gestionnaire); return true;
-            case 2: modifierContact(map); return true;
-            case 3: afficherContact(map, false, null); return true;
+            case 1: gestionnaire(1, map); return true;
+            case 2: gestionnaire(2, map); return true;
+            case 3: gestionnaire(0, map); return true;
             case 4: afficherRappels(file, map); return true;
             case 5: supprimerContact(map); return true;
             case 6: default: System.out.print("\nAu revoir."); return false;
@@ -58,7 +58,7 @@ public class Main {
         Contact ct;
 
         if (modification == 0) {
-            System.out.print("\nQuel contact voulez-vous afficher (prénom)?\n> ");
+            System.out.print("\nQuel contact voulez-vous afficher (prénom en minuscules)?\n> ");
             ct = (Contact) map.get(sc.nextLine()); //Vérifier les exceptions
             System.out.println("Veuillez entrer les informations suivantes (laissez vide si correct)");
         }
@@ -88,6 +88,9 @@ public class Main {
             gest.managePays(ct, var);
             var = true;
         }
+        gest.manageTelephone(ct);
+
+        if (modification == 1 || modification == 2) map.put(ct.getPrenom().toLowerCase(), ct);
 
     }
 
