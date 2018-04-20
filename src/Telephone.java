@@ -1,7 +1,9 @@
+import java.io.Serializable;
+
 /**
  * Created by DufVi1731300 on 2018-02-26.
  */
-public class Telephone {
+public class Telephone implements Serializable{
     private String numero = "", infos = "";
 
     public String getNumero() {

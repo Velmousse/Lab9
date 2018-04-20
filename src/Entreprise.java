@@ -1,7 +1,9 @@
+import java.io.Serializable;
+
 /**
  * Created by DufVi1731300 on 2018-02-26.
  */
-public class Entreprise {
+public class Entreprise implements Serializable{
     private String nom = "";
     private Adresse ad = new Adresse();
 

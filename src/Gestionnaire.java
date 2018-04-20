@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Created by dufvi1731300 on 2018-04-12.
  */
-public class Gestionnaire {
+public class Gestionnaire implements Serializable{
     private static Scanner sc = new Scanner(System.in);
     private char entreeChar = ' ';
     private Contact contact;
@@ -15,7 +16,7 @@ public class Gestionnaire {
     }
 
     public void managePrenom() {
-        System.out.print("Prénom: ");
+        System.out.print("\nPrénom: ");
         switch (modification) {
             case 0: System.out.println(contact.getPrenom()); break;
             case 1: contact.setPrenom(sc.nextLine()); break;
@@ -193,9 +194,10 @@ public class Gestionnaire {
 
                 while (entreeChar == 'o') {
                     Telephone tel = new Telephone();
-                    System.out.println(" Information (cellulaire, maison, travail): " + tel.getInfos());
-                    sc.next();
-                    System.out.println(" Numéro: " + tel.getNumero());
+                    System.out.print(" Information (cellulaire, maison, travail): ");
+                    tel.setInfos(sc.nextLine());
+                    System.out.print(" Numéro: ");
+                    tel.setNumero(sc.nextLine());
                     contact.getListTelephones().add(tel);
                     System.out.print("Voulez-vous entrer un autre numéro de téléphone?\n> ");
                     entreeChar = sc.nextLine().toLowerCase().charAt(0);
@@ -205,9 +207,9 @@ public class Gestionnaire {
 
             case 2:
                 for (Telephone telephone: contact.getListTelephones()) {
-                    System.out.print(" Information (cellulaire, maison, travail): " + telephone.getInfos());
+                    System.out.print(" Information (cellulaire, maison, travail): " + telephone.getInfos() + " ");
                     telephone.setInfos(sc.nextLine());
-                    System.out.print(" Numéro: " + telephone.getNumero());
+                    System.out.print(" Numéro: " + telephone.getNumero() + " ");
                     telephone.setNumero(sc.nextLine());
                 }
         }

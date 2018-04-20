@@ -1,7 +1,9 @@
+import java.io.Serializable;
+
 /**
  * Created by DufVi1731300 on 2018-02-26.
  */
-public class Adresse {
+public class Adresse implements Serializable{
     private String rue = "", appartement = "", ville = "", province = "", pays = "", numeroCivique = "";
 
     public String getRue() {

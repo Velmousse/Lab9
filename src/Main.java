@@ -8,19 +8,21 @@ import java.io.*;
 public class Main {
     final static Scanner sc = new Scanner(System.in);
     static int entree = 0;
+    static String entreeString;
 
     public static void main(String[] args) {
-        Map<String, Contact> mapContacts = new HashMap<>();
+        HashMap<String, Contact> mapContacts = new HashMap<>();
         Queue<Contact> fileRappels = new LinkedList<>();
-        File hashMapData = new File("files/data.dat");
-        Gestionnaire gestionnaire = new Gestionnaire();
+
+        chargerListe(mapContacts, fileRappels);
 
         System.out.print("Bienvenue dans la liste de contacts!");
-        while (menu(mapContacts, fileRappels, hashMapData, gestionnaire)) {}
+        while (menu(mapContacts, fileRappels)) {}
 
+        sauvegarderListe(mapContacts, fileRappels);
     }
 
-    public static boolean menu(Map map, Queue file, File data, Gestionnaire gestionnaire) {
+    public static boolean menu(HashMap map, Queue file) {
         System.out.print("\n1- Ajouter un contact\n" +
                 "2- Modifier un contact\n" +
                 "3- Afficher les contacts\n" +
@@ -39,29 +41,39 @@ public class Main {
         }
     }
 
-    public static void gestionnaire(int modification, Map map) {
+    public static void gestionnaire(int modification, HashMap map) {
         Gestionnaire gest = new Gestionnaire();
         gest.setModification(modification);
         boolean var = false;
 
         if (modification == 0) {
             System.out.print("\nQuel contact voulez-vous afficher (prénom en minuscules)?\n> ");
-            gest.setContact((Contact) map.get(sc.nextLine())); //Vérifier les exceptions
-            System.out.println("Veuillez entrer les informations suivantes (laissez vide si correct)");
+            sc.nextLine();
+            entreeString = sc.nextLine();
+            gest.setContact((Contact) map.get(entreeString)); //Vérifier les exceptions
+            System.out.print("\nVeuillez entrer les informations suivantes (laissez vide si correct):");
         }
-        else if (modification == 1)
+        else if (modification == 1) {
+            System.out.println("Veuillez entrer les informations nécessaires:");
             gest.setContact(new Contact());
+        }
         else {
             System.out.print("\nQuel contact voulez-vous modifier (prénom)?\n> ");  //Vérifier si le contact existe avant
-            gest.setContact(new Contact());
+            sc.nextLine();
+            entreeString = sc.nextLine();
+            gest.setContact((Contact) map.get(entreeString));
             System.out.println("Veuillez entrer les informations suivantes (laissez vide si correct)");
         }
 
         Contact ct = utiliserGestionnaire(gest);
-        if (modification == 1 || modification == 2) map.put(ct.getPrenom().toLowerCase(), ct);
+        if (modification == 1) map.put(ct.getPrenom().toLowerCase(), ct);
+        else if (modification == 2) {
+            map.remove(entreeString);
+            map.put(ct.getPrenom().toLowerCase(), ct);
+        }
     }
 
-    public static void afficherRappels(Queue file, Map map) {
+    public static void afficherRappels(Queue file, HashMap map) {
         System.out.print("\n1- Ajouter un contact à la liste\n" +
                 "2- Afficher la liste de rappels\n" +
                 "3- Quitter\n" +
@@ -72,6 +84,7 @@ public class Main {
             case 1:
                 if (map.size() > 0) {
                     System.out.print("\nQuel contact voulez-vous ajouter (prénom)?\n> ");
+                    sc.nextLine();
                     Contact ct = (Contact) map.get(sc.nextLine()); //Vérifier si le contact existe
                     file.add(ct);
                 }
@@ -91,19 +104,20 @@ public class Main {
         }
     }
 
-    public static void supprimerContact(Map map) {
-        System.out.print("\nVous avez " + map.size() + "contacts, lequel contact voulez-vous supprimer (position)?" +
+    public static void supprimerContact(HashMap map) {
+        System.out.print("\nQuel contact voulez-vous supprimer (prénom)?\n" +
                 "> ");
-        entree = sc.nextInt() - 1;
-        if (entree >= 0 && entree < map.size()) map.remove(entree);
-        else System.out.print("Cette entree est invalide.");
+        sc.nextLine();
+        entreeString = sc.nextLine();
+        if (map.containsKey(entreeString)) map.remove(entreeString);
+        else System.out.println("Ce contact n'existe pas");
     }
 
     public static Contact utiliserGestionnaire(Gestionnaire gest) {
         boolean var = false;
 
         gest.managePrenom();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i <= 1; i++) {
             if (var) {
                 System.out.println("Occupation");
                 gest.managePoste();
@@ -123,5 +137,41 @@ public class Main {
         gest.manageTelephone();
 
         return gest.getContact();
+    }
+
+
+    public static void chargerListe(HashMap map, Queue file) {
+        try {
+            ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream("files/data.dat")));
+            map = (HashMap<String, Contact>) in.readObject();
+            file = (Queue<Contact>) in.readObject();
+            System.out.println("<<La liste a été chargée>>");
+            in.close();
+        }
+        catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        catch (FileNotFoundException ex) {
+            System.out.println("Le fichier n'a pas été trouvé, veuillez réessayer.");
+        }
+        catch (IOException ex) {
+            map = new HashMap<>();
+            file = new LinkedList<>();
+        }
+    }
+
+    public static void sauvegarderListe(HashMap map, Queue file) {
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("files/data.dat")));
+            out.writeObject(map);
+            out.writeObject(file);
+            out.close();
+        }
+        catch (FileNotFoundException ex) {
+            System.out.println("Le fichier n'a pas été trouvé, veuillez réessayer.");
+        }
+        catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
