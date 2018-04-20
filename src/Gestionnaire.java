@@ -5,8 +5,12 @@ import java.util.*;
  * Created by dufvi1731300 on 2018-04-12.
  */
 public class Gestionnaire implements Serializable{
+    private static final String[] listePays = {"canada", "états-unis", "mexique", "france", "allemagne", "brésil"},
+    listeProvince = {"alberta", "colombie-britannique", "île-du-prince-édouard", "manitoba", "nouveau-brunswick", "nouvelle-écosse", "ontario", "québec", "saskatchewan", "terre-neuve-et-labrador"}; //Les provinces, pas les territoires :)))
+
     private static Scanner sc = new Scanner(System.in);
     private char entreeChar = ' ';
+    private String entreeString = "";
     private Contact contact;
     private int modification = 0; //0 == afficher, 1 == ajouter; 2 = modifier
     //variante: false pour le contact, true pour l'occupation
@@ -15,12 +19,20 @@ public class Gestionnaire implements Serializable{
         this.modification = modification;
     }
 
+    public Contact getContact() {
+        return contact;
+    }
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
+
     public void managePrenom() {
         System.out.print("\nPrénom: ");
         switch (modification) {
             case 0: System.out.println(contact.getPrenom()); break;
-            case 1: contact.setPrenom(sc.nextLine()); break;
-            case 2: System.out.print(contact.getPrenom() + " "); contact.setPrenom(sc.nextLine());
+            case 1: verifString(); contact.setPrenom(entreeString); break;
+            case 2: verifString(); System.out.print(contact.getPrenom() + " "); contact.setPrenom(entreeString);
         }
     }
 
@@ -28,8 +40,8 @@ public class Gestionnaire implements Serializable{
         System.out.print(" Poste: ");
         switch (modification) {
             case 0: System.out.println(contact.getOcc().getPoste()); break;
-            case 1: contact.getOcc().setPoste(sc.nextLine()); break;
-            case 2: System.out.print(contact.getOcc().getPoste() + " "); contact.getOcc().setPoste(sc.nextLine());
+            case 1: verifString(); contact.getOcc().setPoste(entreeString); break;
+            case 2: verifString(); System.out.print(contact.getOcc().getPoste() + " "); contact.getOcc().setPoste(entreeString);
         }
     }
 
@@ -43,19 +55,15 @@ public class Gestionnaire implements Serializable{
                 break;
 
             case 1:
-                try {
-                    if (!variante) contact.setNom(sc.nextLine());
-                    else contact.getOcc().getEnt().setNom(sc.nextLine());
-                }
-                catch (TypeNotPresentException ex) {
-                    System.out.println("Argument invalide");
-                    manageNom(variante);
-                }
+                verifString();
+                if (!variante) contact.setNom(entreeString);
+                else contact.getOcc().getEnt().setNom(entreeString);
                 break;
 
             case 2:
-                if (!variante) {System.out.print(contact.getNom() + " "); contact.setNom(sc.nextLine());}
-                else {System.out.print(contact.getOcc().getEnt().getNom() + " "); contact.getOcc().getEnt().setNom(sc.nextLine());}
+                verifString();
+                if (!variante) {System.out.print(contact.getNom() + " "); contact.setNom(entreeString);}
+                else {System.out.print(contact.getOcc().getEnt().getNom() + " "); contact.getOcc().getEnt().setNom(entreeString);}
         }
     }
 
@@ -69,13 +77,15 @@ public class Gestionnaire implements Serializable{
                 break;
 
             case 1:
-                if (!variante) contact.getAd().setNumeroCivique(sc.nextLine());
-                else contact.getOcc().getEnt().getAd().setNumeroCivique(sc.nextLine());
+                verifString();
+                if (!variante) contact.getAd().setNumeroCivique(entreeString);
+                else contact.getOcc().getEnt().getAd().setNumeroCivique(entreeString);
                 break;
 
             case 2:
-                if (!variante) {System.out.print(contact.getAd().getNumeroCivique() + " "); contact.getAd().setNumeroCivique(sc.nextLine());}
-                else {System.out.print(contact.getOcc().getEnt().getAd().getNumeroCivique() + " "); contact.getOcc().getEnt().getAd().setNumeroCivique(sc.nextLine());}
+                verifString();
+                if (!variante) {System.out.print(contact.getAd().getNumeroCivique() + " "); contact.getAd().setNumeroCivique(entreeString);}
+                else {System.out.print(contact.getOcc().getEnt().getAd().getNumeroCivique() + " "); contact.getOcc().getEnt().getAd().setNumeroCivique(entreeString);}
         }
     }
 
@@ -89,13 +99,15 @@ public class Gestionnaire implements Serializable{
                 break;
 
             case 1:
-                if (!variante) contact.getAd().setRue(sc.nextLine());
-                else contact.getOcc().getEnt().getAd().setRue(sc.nextLine());
+                verifString();
+                if (!variante) contact.getAd().setRue(entreeString);
+                else contact.getOcc().getEnt().getAd().setRue(entreeString);
                 break;
 
             case 2:
-                if (!variante) {System.out.print(contact.getAd().getRue() + " "); contact.getAd().setRue(sc.nextLine());}
-                else {System.out.print(contact.getOcc().getEnt().getAd().getRue() + " "); contact.getOcc().getEnt().getAd().setRue(sc.nextLine());}
+                verifString();
+                if (!variante) {System.out.print(contact.getAd().getRue() + " "); contact.getAd().setRue(entreeString);}
+                else {System.out.print(contact.getOcc().getEnt().getAd().getRue() + " "); contact.getOcc().getEnt().getAd().setRue(entreeString);}
         }
     }
 
@@ -109,13 +121,15 @@ public class Gestionnaire implements Serializable{
                 break;
 
             case 1:
-                if (!variante) contact.getAd().setAppartement(sc.nextLine());
-                else contact.getOcc().getEnt().getAd().setAppartement(sc.nextLine());
+                verifString();
+                if (!variante) contact.getAd().setAppartement(entreeString);
+                else contact.getOcc().getEnt().getAd().setAppartement(entreeString);
                 break;
 
             case 2:
-                if (!variante) {System.out.print(contact.getAd().getAppartement() + " "); contact.getAd().setAppartement(sc.nextLine());}
-                else {System.out.print(contact.getOcc().getEnt().getAd().getAppartement() + " "); contact.getOcc().getEnt().getAd().setAppartement(sc.nextLine());}
+                verifString();
+                if (!variante) {System.out.print(contact.getAd().getAppartement() + " "); contact.getAd().setAppartement(entreeString);}
+                else {System.out.print(contact.getOcc().getEnt().getAd().getAppartement() + " "); contact.getOcc().getEnt().getAd().setAppartement(entreeString);}
         }
     }
 
@@ -129,13 +143,15 @@ public class Gestionnaire implements Serializable{
                 break;
 
             case 1:
-                if (!variante) contact.getAd().setVille(sc.nextLine());
-                else contact.getOcc().getEnt().getAd().setVille(sc.nextLine());
+                verifString();
+                if (!variante) contact.getAd().setVille(entreeString);
+                else contact.getOcc().getEnt().getAd().setVille(entreeString);
                 break;
 
             case 2:
-                if (!variante) {System.out.print(contact.getAd().getVille() + " "); contact.getAd().setVille(sc.nextLine());}
-                else {System.out.print(contact.getOcc().getEnt().getAd().getVille() + " "); contact.getOcc().getEnt().getAd().setVille(sc.nextLine());}
+                verifString();
+                if (!variante) {System.out.print(contact.getAd().getVille() + " "); contact.getAd().setVille(entreeString);}
+                else {System.out.print(contact.getOcc().getEnt().getAd().getVille() + " "); contact.getOcc().getEnt().getAd().setVille(entreeString);}
         }
     }
 
@@ -149,13 +165,33 @@ public class Gestionnaire implements Serializable{
                 break;
 
             case 1:
-                if (!variante) contact.getAd().setProvince(sc.nextLine());
-                else contact.getOcc().getEnt().getAd().setProvince(sc.nextLine());
+                if (!variante && contact.getAd().getPays().toLowerCase().equals("canada") || variante && contact.getOcc().getEnt().getAd().getPays().toLowerCase().equals("canada")) verifProvince();
+                else verifString();
+
+                if (!variante) contact.getAd().setProvince(entreeString);
+                else contact.getOcc().getEnt().getAd().setProvince(entreeString);
                 break;
 
             case 2:
-                if (!variante) {System.out.print(contact.getAd().getProvince() + " "); contact.getAd().setProvince(sc.nextLine());}
-                else {System.out.print(contact.getOcc().getEnt().getAd().getProvince() + " "); contact.getOcc().getEnt().getAd().setProvince(sc.nextLine());}
+                if (!variante && contact.getAd().getPays().toLowerCase().equals("canada") || variante && contact.getOcc().getEnt().getAd().getPays().toLowerCase().equals("canada")) verifProvince();
+                else verifString();
+
+                if (!variante) {System.out.print(contact.getAd().getProvince() + " "); contact.getAd().setProvince(entreeString);}
+                else {System.out.print(contact.getOcc().getEnt().getAd().getProvince() + " "); contact.getOcc().getEnt().getAd().setProvince(entreeString);}
+        }
+    }
+
+    private void verifProvince() {
+        entreeString = sc.nextLine();
+        boolean trouve = false;
+        for (String province: listeProvince) {
+            if (entreeString.toLowerCase().equals(province)) {
+                trouve = true;
+            }
+        }
+        if (!trouve) {
+            System.out.print("Entrée invalide. Réessayez: ");
+            verifProvince();
         }
     }
 
@@ -169,13 +205,29 @@ public class Gestionnaire implements Serializable{
                 break;
 
             case 1:
-                if (!variante) contact.getAd().setPays(sc.nextLine());
-                else contact.getOcc().getEnt().getAd().setPays(sc.nextLine());
+                verifPays();
+                if (!variante) contact.getAd().setPays(entreeString);
+                else contact.getOcc().getEnt().getAd().setPays(entreeString);
                 break;
 
             case 2:
-                if (!variante) {System.out.print(contact.getAd().getPays() + " "); contact.getAd().setPays(sc.nextLine());}
-                else {System.out.print(contact.getOcc().getEnt().getAd().getPays() + " "); contact.getOcc().getEnt().getAd().setPays(sc.nextLine());}
+                verifPays();
+                if (!variante) {System.out.print(contact.getAd().getPays() + " "); contact.getAd().setPays(entreeString);}
+                else {System.out.print(contact.getOcc().getEnt().getAd().getPays() + " "); contact.getOcc().getEnt().getAd().setPays(entreeString);}
+        }
+    }
+
+    private void verifPays() {
+        entreeString = sc.nextLine();
+        boolean trouve = false;
+        for (String pays: listePays) {
+            if (entreeString.toLowerCase().equals(pays)) {
+                trouve = true;
+            }
+        }
+        if (!trouve) {
+            System.out.print("Entrée invalide. Réessayez: ");
+            verifPays();
         }
     }
 
@@ -190,14 +242,16 @@ public class Gestionnaire implements Serializable{
 
             case 1:
                 System.out.print("Voulez-vous entrer un numéro de téléphone (o/n)?\n> ");
-                entreeChar =sc.nextLine().toLowerCase().charAt(0);
+                entreeChar = sc.nextLine().toLowerCase().charAt(0);
 
                 while (entreeChar == 'o') {
                     Telephone tel = new Telephone();
                     System.out.print(" Information (cellulaire, maison, travail): ");
-                    tel.setInfos(sc.nextLine());
-                    System.out.print(" Numéro: ");
-                    tel.setNumero(sc.nextLine());
+                    verifString();
+                    tel.setInfos(entreeString);
+                    System.out.print(" Numéro (chiffres collés uniquement): ");
+                    verifNumero();
+                    tel.setNumero(entreeString);
                     contact.getListTelephones().add(tel);
                     System.out.print("Voulez-vous entrer un autre numéro de téléphone?\n> ");
                     entreeChar = sc.nextLine().toLowerCase().charAt(0);
@@ -208,24 +262,45 @@ public class Gestionnaire implements Serializable{
             case 2:
                 for (Telephone telephone: contact.getListTelephones()) {
                     System.out.print(" Information (cellulaire, maison, travail): " + telephone.getInfos() + " ");
-                    telephone.setInfos(sc.nextLine());
+                    verifString();
+                    telephone.setInfos(entreeString);
                     System.out.print(" Numéro: " + telephone.getNumero() + " ");
-                    telephone.setNumero(sc.nextLine());
+                    verifNumero();
+                    telephone.setNumero(entreeString);
                 }
         }
     }
 
-    public Contact getContact() {
-        return contact;
+    private void verifNumero() {
+        entreeString = sc.nextLine();
+        boolean invalide = false;
+        if (entreeString.length() > 15) {
+            System.out.print("Entrée trop longue. Réessayez: ");
+            verifNumero();
+        }
+
+        char[] charArray = entreeString.toCharArray();
+
+        for (char cara: charArray) {
+            if ((int) cara < 48 || (int) cara > 57) invalide = true;
+        }
+        if (invalide) {
+            System.out.print("Caractère invalide. Réessayez: ");
+            verifNumero();
+        }
     }
 
-    public void setContact(Contact contact) {
-        this.contact = contact;
-    }
+    private void verifString() {
+        entreeString = sc.nextLine();
+        boolean invalide = false;
+        char[] charArray = entreeString.toCharArray();
 
-    public String entree() {
-        String entree = "";
-
-        return entree;
+        for (char cara: charArray) {
+            if ((int) cara >= 33 && (int) cara <= 47) invalide = true;
+        }
+        if (invalide) {
+            System.out.print("Caractère invalide. Réessayez: ");
+            verifString();
+        }
     }
 }

@@ -1,3 +1,7 @@
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import jdk.internal.util.xml.impl.Input;
+import sun.awt.image.ImageWatched;
+
 import java.util.*;
 import java.io.*;
 
@@ -11,10 +15,11 @@ public class Main {
     static String entreeString;
 
     public static void main(String[] args) {
-        HashMap<String, Contact> mapContacts = new HashMap<>();
-        Queue<Contact> fileRappels = new LinkedList<>();
+        HashMap<String, Contact> mapContacts;
+        Queue<Contact> fileRappels;
 
-        chargerListe(mapContacts, fileRappels);
+        mapContacts = chargerMap();  //Je ne sais pas trop pourquoi, mais Java ne passait pas en référence la map, il ne passait que sa valeur initiale,
+        fileRappels = chargerFile(); //donc la map restait dans sa méthode sans jamais en sortir.
 
         System.out.print("Bienvenue dans la liste de contacts!");
         while (menu(mapContacts, fileRappels)) {}
@@ -31,14 +36,16 @@ public class Main {
                 "6- Quitter\n" +
                 "> ");
 
-        switch (sc.nextInt()) {
-            case 1: gestionnaire(1, map); return true;
-            case 2: gestionnaire(2, map); return true;
-            case 3: gestionnaire(0, map); return true;
-            case 4: afficherRappels(file, map); return true;
-            case 5: supprimerContact(map); return true;
-            case 6: default: System.out.print("\nAu revoir."); return false;
-        }
+        entree = intInput();
+
+            switch (entree) {
+                case 1: gestionnaire(1, map); return true;
+                case 2: gestionnaire(2, map); return true;
+                case 3: gestionnaire(0, map); return true;
+                case 4: afficherRappels(file, map); return true;
+                case 5: supprimerContact(map); return true;
+                case 6: default: System.out.print("\nAu revoir."); return false;
+            }
     }
 
     public static void gestionnaire(int modification, HashMap map) {
@@ -48,9 +55,8 @@ public class Main {
 
         if (modification == 0) {
             System.out.print("\nQuel contact voulez-vous afficher (prénom en minuscules)?\n> ");
-            sc.nextLine();
-            entreeString = sc.nextLine();
-            gest.setContact((Contact) map.get(entreeString)); //Vérifier les exceptions
+            mapContains(map);
+            gest.setContact((Contact) map.get(entreeString));
             System.out.print("\nVeuillez entrer les informations suivantes (laissez vide si correct):");
         }
         else if (modification == 1) {
@@ -58,9 +64,8 @@ public class Main {
             gest.setContact(new Contact());
         }
         else {
-            System.out.print("\nQuel contact voulez-vous modifier (prénom)?\n> ");  //Vérifier si le contact existe avant
-            sc.nextLine();
-            entreeString = sc.nextLine();
+            System.out.print("\nQuel contact voulez-vous modifier (prénom)?\n> ");
+            mapContains(map);
             gest.setContact((Contact) map.get(entreeString));
             System.out.println("Veuillez entrer les informations suivantes (laissez vide si correct)");
         }
@@ -78,15 +83,17 @@ public class Main {
                 "2- Afficher la liste de rappels\n" +
                 "3- Quitter\n" +
                 "> ");
-        entree = sc.nextInt();
+
+        entree = intInput();
 
         switch (entree) {
             case 1:
                 if (map.size() > 0) {
                     System.out.print("\nQuel contact voulez-vous ajouter (prénom)?\n> ");
-                    sc.nextLine();
-                    Contact ct = (Contact) map.get(sc.nextLine()); //Vérifier si le contact existe
+                    mapContains(map);
+                    Contact ct = (Contact) map.get(entreeString);
                     file.add(ct);
+                    System.out.println("Le contact a bien été ajouté.");
                 }
                 break;
             case 2:
@@ -130,8 +137,8 @@ public class Main {
             gest.manageRue(var);
             gest.manageAppartement(var);
             gest.manageVille(var);
-            gest.manageProvince(var);
             gest.managePays(var);
+            gest.manageProvince(var);
             var = true;
         }
         gest.manageTelephone();
@@ -140,24 +147,42 @@ public class Main {
     }
 
 
-    public static void chargerListe(HashMap map, Queue file) {
+    public static HashMap<String, Contact> chargerMap() {
+        HashMap<String, Contact> map = new HashMap<>();
         try {
             ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream("files/data.dat")));
             map = (HashMap<String, Contact>) in.readObject();
-            file = (Queue<Contact>) in.readObject();
-            System.out.println("<<La liste a été chargée>>");
-            in.close();
+            System.out.println("<<Liste de contacts chargée>>");
+        }
+        catch (FileNotFoundException ex) { }
+        catch (IOException ex) {
+            ex.printStackTrace();
         }
         catch (ClassNotFoundException ex) {
             ex.printStackTrace();
+        }
+        return map;
+    }
+
+
+    public static Queue<Contact> chargerFile() {
+        Queue<Contact> file = new LinkedList<>();
+        try {
+            ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream("files/data.dat")));
+            in.readObject();
+            file = (LinkedList<Contact>) in.readObject();
+            System.out.println("<<Liste de rappels chargée>>");
         }
         catch (FileNotFoundException ex) {
             System.out.println("Le fichier n'a pas été trouvé, veuillez réessayer.");
         }
         catch (IOException ex) {
-            map = new HashMap<>();
-            file = new LinkedList<>();
+            ex.printStackTrace();
         }
+        catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return file;
     }
 
     public static void sauvegarderListe(HashMap map, Queue file) {
@@ -172,6 +197,22 @@ public class Main {
         }
         catch (IOException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    static int intInput() {
+        //Avec un try catch il y aurait eu une boucle infinie ici, le Scanner ne se serait pas réactivé
+        while (!sc.hasNextInt())
+            System.out.println(sc.next() + " n'est pas un nombre valide, Réessayez\n> ");
+        return sc.nextInt();
+    }
+
+    static void mapContains(HashMap map) {
+        sc.nextLine();
+        entreeString = sc.nextLine();
+        while (!(map.containsKey(entreeString))) {
+            System.out.print("Entrée invalide. Réessayez\n> ");
+            entreeString = sc.nextLine();
         }
     }
 }
